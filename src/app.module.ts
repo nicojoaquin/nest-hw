@@ -6,18 +6,18 @@ import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiKeyGuard } from './api-key/api-key.guard';
-import { ApiKeyService } from './api-key/api-key.service';
+import { ApiKeyModule } from './api-key/api-key.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    AuthModule,
+    ApiKeyModule,
     PrismaModule,
+    AuthModule,
     UserModule,
   ],
   controllers: [UserController],
   providers: [
-    ApiKeyService,
     {
       provide: APP_GUARD,
       useClass: ApiKeyGuard,
