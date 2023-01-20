@@ -5,7 +5,6 @@ import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 export const useAppMiddlewares = (app: INestApplication) => {
   app.use(cookieParser());
-  console.log('llega');
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -23,4 +23,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       await app.close();
     });
   }
+
+  cleanDb() {
+    this.$transaction([
+      this.post.deleteMany(),
+      this.profile.deleteMany(),
+      this.user.deleteMany(),
+    ]);
+  }
 }
