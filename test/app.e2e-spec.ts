@@ -51,7 +51,6 @@ describe('App e2e', () => {
 
   const { email, password } = authDto;
   let cookie: string | null;
-  let userId: string | null;
 
   describe('Auth', () => {
     describe('Signup', () => {
@@ -116,9 +115,7 @@ describe('App e2e', () => {
               email: expect.any(String),
             }),
           )
-          .returns((ctx) => {
-            userId = ctx.res.body.id;
-          });
+          .stores('userId', 'id');
       });
     });
     describe('Edit user', () => {
@@ -194,8 +191,6 @@ describe('App e2e', () => {
 
     const editPostDto = { ...postDto, title: 'Post updated' };
 
-    let postId: string | null;
-
     describe('Create post', () => {
       it('should throw if title is empty', () => {
         return spec()
@@ -217,7 +212,7 @@ describe('App e2e', () => {
               ...postDto,
             }),
           )
-          .returns((ctx) => (postId = ctx.res.body.id));
+          .stores('postId', 'id');
       });
     });
     describe('Get posts', () => {
@@ -235,7 +230,7 @@ describe('App e2e', () => {
       it('should get all user posts', () => {
         return spec()
           .get('/posts')
-          .withQueryParams('user', userId)
+          .withQueryParams('user', '$S{userId}')
           .expectStatus(200)
           .expectJsonLike([
             { author: { ...profileDto, firstName: 'Nicolás' }, ...postDto },
@@ -245,7 +240,8 @@ describe('App e2e', () => {
     describe('Get post', () => {
       it('should get post', () => {
         return spec()
-          .get(`/posts/${postId}`)
+          .get('/posts/{id}')
+          .withPathParams('id', '$S{postId}')
           .expectStatus(200)
           .expectJsonLike({
             author: { ...profileDto, firstName: 'Nicolás' },
@@ -273,7 +269,8 @@ describe('App e2e', () => {
 
       it('should edit post', () => {
         return spec()
-          .put(`/posts/update/${postId}`)
+          .put('/posts/update/{id}')
+          .withPathParams('id', '$S{postId}')
           .withCookies(cookie)
           .withBody(editPostDto)
           .expectStatus(200)
@@ -283,7 +280,8 @@ describe('App e2e', () => {
     describe('Delete post', () => {
       it('should delete post', () => {
         return spec()
-          .delete(`/posts/${postId}`)
+          .delete('/posts/{id}')
+          .withPathParams('id', '$S{postId}')
           .withCookies(cookie)
           .expectStatus(200)
           .expectJsonLike(editPostDto);
