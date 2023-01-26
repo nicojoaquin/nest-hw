@@ -12,7 +12,7 @@ export class UserController {
 
   @Get('get-one')
   getUser(@User() user: UserModel) {
-    return user;
+    return this.userService.getUser(user.id);
   }
 
   @Put('update')

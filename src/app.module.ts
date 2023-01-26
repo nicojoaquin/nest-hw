@@ -8,6 +8,10 @@ import { ApiKeyGuard } from './api-key/api-key.guard';
 import { ApiKeyModule } from './api-key/api-key.module';
 import { ProfileModule } from './profile/profile.module';
 import { PostModule } from './posts/posts.module';
+import {
+  IsAlreadyExistConstraint,
+  IsNotExistConstraint,
+} from './decorators/exists.decorator';
 
 @Module({
   imports: [
@@ -24,6 +28,8 @@ import { PostModule } from './posts/posts.module';
       provide: APP_GUARD,
       useClass: ApiKeyGuard,
     },
+    IsAlreadyExistConstraint,
+    IsNotExistConstraint,
   ],
 })
 export class AppModule {}

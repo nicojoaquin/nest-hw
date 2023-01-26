@@ -15,35 +15,30 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignupDto) {
-    try {
-      const password = await argon.hash(dto.password);
+    const password = await argon.hash(dto.password);
 
-      const user = await this.prisma.user.create({
-        data: {
-          email: dto.email,
-          password,
-        },
-      });
+    const user = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        password,
+      },
+    });
 
-      const profile = await this.prisma.profile.create({
-        data: {
-          firstName: dto.firstName,
-          lastName: dto.lastName,
-          userId: user.id,
-        },
-      });
+    const profile = await this.prisma.profile.create({
+      data: {
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        userId: user.id,
+      },
+    });
 
-      return profile;
-    } catch (error) {
-      if (error.code === 'P2002')
-        throw new ForbiddenException('User already exists');
+    const token = await this.signToken(user.id, user.email);
 
-      throw error;
-    }
+    return { profile, token };
   }
 
   async signin(dto: SigninDto) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: { email: dto.email },
     });
 

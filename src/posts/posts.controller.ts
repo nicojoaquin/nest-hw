@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { PostService } from './posts.service';
-import { CreatePostDto } from './dto';
+import { CreatePostDto, CreatePostQueryDto } from './dto';
 import { UpdatePostDto } from './dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
@@ -29,7 +29,8 @@ export class PostController {
 
   @Public()
   @Get()
-  getPosts(@Query('user') user?: string) {
+  getPosts(@Query() query?: CreatePostQueryDto) {
+    const { user = null } = query;
     return this.postService.getPosts(user && +user);
   }
 

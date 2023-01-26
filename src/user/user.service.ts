@@ -7,6 +7,13 @@ import { EditUserDto } from './dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  getUser(id: User['id']) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { profile: true },
+    });
+  }
+
   async editUser(userId: User['id'], dto: EditUserDto) {
     const user = await this.prisma.user.update({
       where: { id: userId },

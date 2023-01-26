@@ -9,6 +9,6 @@ export class ApiKeyGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const key = req.headers['x-api-key'] ?? req.query.api_key; // checks the header, moves to query if null
 
-    return this.apiKeyService.isKeyValid(key);
+    return this.apiKeyService.validateKey(key);
   }
 }

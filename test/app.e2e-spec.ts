@@ -62,7 +62,7 @@ describe('App e2e', () => {
         return spec()
           .post('/auth/signup')
           .withBody(authDto)
-          .expectStatus(403)
+          .expectStatus(400)
           .expectBodyContains('User already exists');
       });
     });

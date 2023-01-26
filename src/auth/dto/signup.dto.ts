@@ -1,8 +1,10 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsAlreadyExist } from 'src/decorators';
 
 export class SignupDto {
   @IsEmail({}, { message: 'A valid email is required' })
   @IsNotEmpty({ message: 'Email field is required' })
+  @IsAlreadyExist({ model: 'user' }, { message: 'User already exists' })
   email: string;
 
   @IsString({ message: 'Password field must be a string' })
