@@ -14,7 +14,7 @@ import { CreatePostDto, CreatePostQueryDto } from './dto';
 import { UpdatePostDto } from './dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
-import { Public, User } from '../auth/decorators';
+import { Public, GetUser } from '../auth/decorators';
 import { User as UserModel } from '@prisma/client';
 
 @UseGuards(JwtGuard)
@@ -23,8 +23,11 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post('create')
-  createPost(@User() user: UserModel, @Body() dto: CreatePostDto) {
-    return this.postService.createPost(user.id, dto);
+  createPost(
+    @GetUser('id') userId: UserModel['id'],
+    @Body() dto: CreatePostDto,
+  ) {
+    return this.postService.createPost(userId, dto);
   }
 
   @Public()
@@ -44,13 +47,16 @@ export class PostController {
   editPost(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdatePostDto,
-    @User() user: UserModel,
+    @GetUser() user: UserModel,
   ) {
     return this.postService.editPost(id, dto, user);
   }
 
   @Delete(':id')
-  deletePost(@Param('id', ParseIntPipe) id: number, @User() user: UserModel) {
+  deletePost(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: UserModel,
+  ) {
     return this.postService.deletePost(id, user);
   }
 }
