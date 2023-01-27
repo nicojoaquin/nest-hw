@@ -8,6 +8,6 @@ async function bootstrap() {
   useAppMiddlewares(app);
 
   await app.listen(3001);
-  console.log('Server initialized in http://localhost:3001');
+  console.log(`Server initialized in ${await app.getUrl()}`);
 }
 bootstrap();
