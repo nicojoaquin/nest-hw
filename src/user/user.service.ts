@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { exclude } from 'src/helpers/utils';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
 
@@ -7,11 +8,13 @@ import { EditUserDto } from './dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  getUser(id: User['id']) {
-    return this.prisma.user.findFirst({
+  async getUser(id: User['id']) {
+    const user = await this.prisma.user.findFirst({
       where: { id },
       include: { profile: true },
     });
+
+    return exclude<User>(user, 'password');
   }
 
   async editUser(userId: User['id'], dto: EditUserDto) {
@@ -22,8 +25,6 @@ export class UserService {
       },
     });
 
-    delete user.password;
-
-    return user;
+    return exclude<User>(user, 'password');
   }
 }

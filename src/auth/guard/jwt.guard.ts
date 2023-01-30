@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { IS_PUBLC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
@@ -12,22 +13,24 @@ export class JwtGuard extends AuthGuard('jwt') {
     super();
   }
 
-  async canActivate(context: ExecutionContext) {
+  canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.get<boolean>(
-      'isPublic',
+      IS_PUBLC_KEY,
       context.getHandler(),
     );
 
     if (isPublic) {
       return true;
     }
+    return super.canActivate(context);
+  }
 
-    try {
-      const canActivate = await super.canActivate(context);
+  handleRequest(err: any, user: any) {
+    console.log(user);
 
-      if (canActivate) return true;
-    } catch (error) {
+    if (err || !user)
       throw new UnauthorizedException('You are not authenticated');
-    }
+
+    return user;
   }
 }

@@ -13,13 +13,12 @@ import {
   IsNotExistConstraint,
 } from './decorators/exists.decorator';
 import { PostMediaModule } from './post-media/post-media.module';
-import { MulterModule } from '@nestjs/platform-express';
-import multerConfig from './config/multer/multer-config';
+import { MulterConfigModule } from './multer/multer-config.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MulterModule.register(multerConfig),
+    MulterConfigModule,
     ApiKeyModule,
     PrismaModule,
     AuthModule,

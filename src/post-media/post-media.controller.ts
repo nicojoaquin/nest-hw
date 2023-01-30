@@ -5,19 +5,20 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/auth/decorators';
-import { PostMediaService } from './post-media.service';
-import imageConfig from 'src/config/multer/image-config';
+import { Role } from '@prisma/client';
+import { Public, Roles } from 'src/auth/decorators';
+import imageValidator from 'src/multer/validators/image.validator';
+import { PostMediaService } from 'src/post-media/post-media.service';
 
 @Controller('post-media')
 export class PostMediaController {
   constructor(private postMediaService: PostMediaService) {}
-
   @Public()
   @Post('/upload')
+  // @Roles(Role.Admin)
   @UseInterceptors(FilesInterceptor('files'))
   uploadImages(
-    @UploadedFiles(imageConfig)
+    @UploadedFiles(imageValidator)
     images: Express.Multer.File[],
   ) {
     return this.postMediaService.uploadImages(images);

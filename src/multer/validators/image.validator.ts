@@ -1,5 +1,5 @@
 import { ParseFilePipe } from '@nestjs/common';
-import { FileTypeValidator } from '../../post-media/pipes/file-type-validator.pipe';
+import { FileTypeValidator } from '../pipes/file-type-validator.pipe';
 
 const allowedFiles = ['jpeg', 'jpg', 'JPG', 'JPEG', 'png'];
 
