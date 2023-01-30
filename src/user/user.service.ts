@@ -8,7 +8,7 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   getUser(id: User['id']) {
-    return this.prisma.user.findUnique({
+    return this.prisma.user.findFirst({
       where: { id },
       include: { profile: true },
     });

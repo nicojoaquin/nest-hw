@@ -11,37 +11,54 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email String
+  email    String
   password String
 
   profile Profile?
 }
 
 model Profile {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   firstName String
-  lastName String
+  lastName  String
 
-  user User @relation(fields: [userId], references: [id])
-  userId Int @unique
-  posts Post[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
+  posts  Post[]
 }
 
 model Post {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title String
-  description String? 
+  title       String
+  description String?
 
-  author Profile @relation(fields: [authorId], references: [id])
+  author   Profile @relation(fields: [authorId], references: [id])
   authorId Int
+
+  medias PostMedia[]
+}
+
+model PostMedia {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  src    String
+  key    String
+
+  alt    String?
+  type   String 
+
+  Post   Post  @relation(fields: [postId], references: [id])
+  postId Int
 }

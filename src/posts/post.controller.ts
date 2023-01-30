@@ -9,7 +9,7 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { PostService } from './posts.service';
+import { PostService } from './post.service';
 import { CreatePostDto, CreatePostQueryDto } from './dto';
 import { UpdatePostDto } from './dto';
 import { UseGuards } from '@nestjs/common';
