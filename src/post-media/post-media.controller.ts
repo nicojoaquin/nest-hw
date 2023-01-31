@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Post,
   UploadedFiles,
@@ -13,6 +14,7 @@ import { RemoveFilesInterceptor } from 'src/interpectors';
 import imageValidator from 'src/multer/validators/image.validator';
 import { PostMediaService } from 'src/post-media/post-media.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
+import { DeleteImagesDto, UploadImagesDto } from './dto';
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('post-media')
@@ -25,7 +27,14 @@ export class PostMediaController {
   uploadImages(
     @UploadedFiles(imageValidator)
     images: Express.Multer.File[],
+    @Body() dto: UploadImagesDto,
   ) {
-    return this.postMediaService.uploadImages(images);
+    return this.postMediaService.uploadImages(images, dto);
+  }
+
+  @Post('/delete')
+  @Roles(Role.ADMIN)
+  deleteImages(@Body() dto: DeleteImagesDto) {
+    return this.postMediaService.deleteImages(dto.keys);
   }
 }

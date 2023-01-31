@@ -4,6 +4,6 @@ import { Request } from 'express';
 export const GetUser = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const req: Request = ctx.switchToHttp().getRequest();
-    return req.files;
+    return data ? req.user[data] : req.user;
   },
 );

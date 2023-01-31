@@ -16,12 +16,16 @@ enum Role {
   ADMIN 
 }
 
+enum MediaType {
+  IMAGE
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  email    String
+  email    String @unique
   password String
   roles    Role[] @default([USER])
 
@@ -64,7 +68,7 @@ model PostMedia {
   key    String
 
   alt    String?
-  type   String 
+  type   MediaType 
 
   Post   Post  @relation(fields: [postId], references: [id])
   postId Int

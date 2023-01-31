@@ -14,6 +14,7 @@ export class CreatePostDto {
 
 export class CreatePostQueryDto {
   @IsNumber()
+  @IsNotEmpty({ message: 'User id field is required' })
   @IsNotExist<Profile>(
     { model: 'profile', fieldToValidate: 'userId' },
     { message: "User doesn't exist" },

@@ -14,11 +14,14 @@ import {
 } from './decorators/exists.decorator';
 import { PostMediaModule } from './post-media/post-media.module';
 import { MulterConfigModule } from './multer/multer-config.module';
+import { FileUploaderService } from './file-uploader/file-uploader.service';
+import { FileUploaderModule } from './file-uploader/file-uploader.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MulterConfigModule,
+    FileUploaderModule,
     ApiKeyModule,
     PrismaModule,
     AuthModule,
@@ -34,6 +37,7 @@ import { MulterConfigModule } from './multer/multer-config.module';
     },
     IsAlreadyExistConstraint,
     IsNotExistConstraint,
+    FileUploaderService,
   ],
 })
 export class AppModule {}

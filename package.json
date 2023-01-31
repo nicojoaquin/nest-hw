@@ -27,7 +27,8 @@
     "test-db:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "test-db:up": "docker-compose up test-db -d",
     "test-db:rm": "docker-compose rm test-db -s -f -v",
-    "test-db:restart": "yarn test-db:rm && yarn test-db:up && sleep 1 && yarn test-db:deploy"
+    "test-db:restart": "yarn test-db:rm && yarn test-db:up && sleep 1 && yarn test-db:deploy",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -40,6 +41,7 @@
     "@prisma/client": "^4.9.0",
     "add": "^2.0.6",
     "argon2": "^0.30.3",
+    "aws-sdk": "^2.1305.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",

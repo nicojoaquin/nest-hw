@@ -32,6 +32,7 @@ export class PostService {
       },
       include: {
         author: true,
+        medias: true,
       },
     });
   }
