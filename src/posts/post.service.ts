@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreatePostDto } from './dto';
 import { UpdatePostDto } from './dto';
@@ -53,7 +57,9 @@ export class PostService {
     if (!postToEdit) throw new ForbiddenException("Post doesn't exist");
 
     if (postToEdit.author.userId !== user.id)
-      throw new ForbiddenException('You cant edit this post');
+      throw new UnauthorizedException(
+        'You are not authorized to do this action',
+      );
 
     return this.prisma.post.update({
       where: { id: postToEdit.id },
@@ -70,7 +76,7 @@ export class PostService {
     if (!postToDelete) throw new ForbiddenException("Post doesn't exist");
 
     if (postToDelete.author.userId !== user.id)
-      throw new ForbiddenException('You cant edit this post');
+      throw new ForbiddenException('You are not authorized to do this action');
 
     return this.prisma.post.delete({ where: { id: postToDelete.id } });
   }

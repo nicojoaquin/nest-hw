@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FileUploaderService } from '../file-uploader/file-uploader.service';
-import { MediaType } from '@prisma/client';
+import { MediaType, User } from '@prisma/client';
 import { DeleteImagesDto, UploadImagesDto } from './dto';
 
 @Injectable()
@@ -11,7 +11,25 @@ export class PostMediaService {
     private fileUploaderService: FileUploaderService,
   ) {}
 
-  async uploadImages(images: Express.Multer.File[], dto: UploadImagesDto) {
+  async uploadImages(
+    images: Express.Multer.File[],
+    dto: UploadImagesDto,
+    userId: User['id'],
+  ) {
+    const { profile } = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { profile: true },
+    });
+
+    const post = await this.prisma.post.findFirst({
+      where: { authorId: profile.id, id: dto.postId },
+    });
+
+    if (!post)
+      throw new UnauthorizedException(
+        'You are not authorized to do this action',
+      );
+
     const results = await this.fileUploaderService.uploadFiles(images);
 
     await this.prisma.postMedia.createMany({
@@ -27,13 +45,37 @@ export class PostMediaService {
     return { images };
   }
 
-  async deleteImages(keys: DeleteImagesDto['keys']) {
-    await this.prisma.postMedia.deleteMany({
-      where: { key: { in: keys } },
+  async deleteImages(dto: DeleteImagesDto, userId: User['id']) {
+    const { profile } = await this.prisma.user.findFirst({
+      where: { id: userId },
+      include: { profile: true },
     });
 
-    await this.fileUploaderService.deleteFiles(keys);
+    const post = await this.prisma.post.findFirst({
+      include: { medias: true },
+      where: { authorId: profile.id, id: dto.postId },
+    });
 
-    return { succes: true };
+    if (!post)
+      throw new UnauthorizedException(
+        'You are not authorized to do this action',
+      );
+
+    const postMedias = await this.prisma.postMedia.findMany({
+      where: { key: { in: dto.keys }, postId: post.id },
+    });
+
+    if (!postMedias.length)
+      throw new UnauthorizedException(
+        'You are not authorized to do this action',
+      );
+
+    await this.prisma.postMedia.deleteMany({
+      where: { id: { in: postMedias.map(({ id }) => id) } },
+    });
+
+    await this.fileUploaderService.deleteFiles(dto.keys);
+
+    return { images: postMedias };
   }
 }

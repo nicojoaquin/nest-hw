@@ -3,7 +3,7 @@ import { FileTypeValidator } from '../pipes/file-type-validator.pipe';
 
 const allowedFiles = ['jpeg', 'jpg', 'JPG', 'JPEG', 'png'];
 
-export default new ParseFilePipe({
+export const imageValidator = new ParseFilePipe({
   validators: [
     new FileTypeValidator(
       {

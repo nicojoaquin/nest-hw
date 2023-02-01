@@ -10,10 +10,10 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { CreatePostDto, CreatePostQueryDto } from './dto';
+import { CreatePostDto, GetPostsDto } from './dto';
 import { UpdatePostDto } from './dto';
 import { UseGuards } from '@nestjs/common';
-import { JwtGuard } from '../auth/guard/jwt.guard';
+import { JwtGuard } from '../auth/guards';
 import { Public, GetUser } from '../auth/decorators';
 import { User } from '@prisma/client';
 
@@ -29,7 +29,7 @@ export class PostController {
 
   @Public()
   @Get()
-  getPosts(@Query() query?: CreatePostQueryDto) {
+  getPosts(@Query() query?: GetPostsDto) {
     const { user = null } = query;
     return this.postService.getPosts(user && +user);
   }

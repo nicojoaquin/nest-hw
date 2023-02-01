@@ -1,8 +1,8 @@
 import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class EditUserDto {
-  @IsEmail({}, { message: 'A valid email is required' })
   @IsOptional()
+  @IsEmail({}, { message: 'A valid email is required' })
   email?: string;
 
   @IsOptional()
