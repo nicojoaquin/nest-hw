@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 export class ApiKeyService {
   constructor(private config: ConfigService) {}
 
-  isKeyValid(key: string) {
+  validateKey(key: string) {
     if (key && key === this.config.get('API_KEY')) {
       return true;
     }
