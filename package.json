@@ -27,7 +27,8 @@
     "test-db:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "test-db:up": "docker-compose up -d test-db",
     "test-db:rm": "docker-compose rm -s -f -v test-db",
-    "test-db:restart": "yarn test-db:rm && yarn test-db:up && sleep 1 && yarn test-db:deploy"
+    "test-db:restart": "yarn test-db:rm && yarn test-db:up && sleep 1 && yarn test-db:deploy",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -37,8 +38,11 @@
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
-    "@prisma/client": "4.9.0",
+    "@nestjs/swagger": "^6.1.4",
+    "@prisma/client": "^4.9.0",
+    "add": "^2.0.6",
     "argon2": "^0.30.3",
+    "aws-sdk": "^2.1305.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
@@ -47,7 +51,10 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "swagger-ui-express": "^4.6.0",
+    "uuid": "^9.0.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -56,6 +63,7 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/jest": "29.2.4",
+    "@types/multer": "^1.4.7",
     "@types/node": "18.11.18",
     "@types/passport-jwt": "^3.0.8",
     "@types/supertest": "^2.0.11",
